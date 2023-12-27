@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chỉnh sửa tính năng</title>
+</head>
+<body>
+  <h1>Chỉnh sửa tính năng</h1>
+
+  <form id="editForm">
+    <label for="featureName">Tên tính năng:</label>
+    <input type="text" id="featureName" name="featureName">
+    <br>
+
+    <label for="featureDescription">Mô tả tính năng:</label>
+    <textarea id="featureDescription" name="featureDescription"></textarea>
+    <br>
+
+    <input type="submit" value="Lưu">
+  </form>
+
+  <script src="https://cdn.socket.io/socket.io.js"></script>
+  <script>
+    // Cấu hình phục vụ các tệp tĩnh
+app.use(express.static(__dirname));
+    // Kết nối tới máy chủ Socket.IO
+    const socket = io();
+
+    // Lắng nghe sự kiện "featureUpdated" để cập nhật dữ liệu khi có thông báo từ server
+    socket.on('featureUpdated', (data) => {
+      // Xử lý cập nhật dữ liệu tính năng trên giao diện
+      // Ví dụ: update thông tin tính năng trong form
+      document.getElementById('featureName').value = data.name;
+      document.getElementById('featureDescription').value = data.description;
+    });
+
+    // Gửi sự kiện "editFeature" khi người dùng submit form
+    document.getElementById('editForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      // Lấy thông tin từ form
+      const featureName = document.getElementById('featureName').value;
+      const featureDescription = document.getElementById('featureDescription').value;
+
+      // Gửi sự kiện "editFeature" tới server với dữ liệu tính năng được chỉnh sửa
+      socket.emit('editFeature', { name: featureName, description: featureDescription });
+
+      // Xử lý logic lưu dữ liệu tính năng vào cơ sở dữ liệu (có thể sử dụng AJAX hoặc Fetch API)
+      // ...
+    });
+  </script>
+</body>
+</html>
